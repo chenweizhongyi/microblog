@@ -87,3 +87,15 @@ def user(nickname):
     return render_template('user.html',
         user = user,
         posts = posts)
+
+@app.route('/signin',methods=['POST'])
+def signin():
+    if request.method == 'POST':
+        if request.form['password1'] == request.form['password2']:
+            flash('两次输入的密码不一致')
+        elif User.valid_regist(request.form['username'], request.form['email']):
+            user = User(username=request.form['username'], password=request.form['password1'],
+                        email=request.form['email'])
+            db.session.add(user)
+            db.session.commit()
+            flash('注册成功')
