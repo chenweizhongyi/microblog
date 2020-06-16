@@ -1,6 +1,6 @@
 from app import app,db, lm, oid
 from flask import render_template,flash,redirect, session, url_for, request, g
-from .forms import LoginForm
+from .forms import LoginForm,SigninForm
 from .models import User
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -88,14 +88,19 @@ def user(nickname):
         user = user,
         posts = posts)
 
-@app.route('/signin',methods=['POST'])
+@app.route('/signin',methods=['POST','GET'])
 def signin():
+    form = SigninForm()
     if request.method == 'POST':
-        if request.form['password1'] == request.form['password2']:
+        if request.form['password1'] != request.form['password2']:
             flash('两次输入的密码不一致')
-        elif User.valid_regist(request.form['username'], request.form['email']):
+        if User.valid_regist(form.username.data,form.email.data):
             user = User(username=request.form['username'], password=request.form['password1'],
                         email=request.form['email'])
             db.session.add(user)
             db.session.commit()
             flash('注册成功')
+    return render_template(
+        'signin.html',
+        form = form
+    )

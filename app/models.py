@@ -13,8 +13,8 @@ class User(db.Model):
     def avatar(self,size):
         return 'http://www.gravatar.com/avatar/' + md5(self.email.encode('utf-8')).hexdigest() + '?d=mm&s=' + str(size)
 
-    def valid_regist(self,username,password,email):
-        user = User.query.filter(or_(self.username == username,self.email == email)).first()
+    def valid_regist(self,username_value,email_value):
+        user = User.query.filter(or_(self.username == username_value,self.email == email_value)).first()
         if user:
             return True
         else:
