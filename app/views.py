@@ -32,8 +32,10 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data,ask_for=['nickname', 'email'])
+
+    # if form.validate_on_submit():
+    #     session['remember_me'] = form.remember_me.data
+    #     return oid.try_login(form.openid.data,ask_for=['nickname', 'email'])
     return render_template('login.html',
         title = 'Sign In',
         form = form,
@@ -94,12 +96,14 @@ def signin():
     if request.method == 'POST':
         if request.form['password1'] != request.form['password2']:
             flash('两次输入的密码不一致')
-        if User.valid_regist(form.username.data,form.email.data):
+        if User().valid_regist(form.username.data,form.email.data):
             user = User(username=request.form['username'], password=request.form['password1'],
                         email=request.form['email'])
             db.session.add(user)
             db.session.commit()
             flash('注册成功')
+        else:
+            flash('用户名或邮箱已经存在')
     return render_template(
         'signin.html',
         form = form

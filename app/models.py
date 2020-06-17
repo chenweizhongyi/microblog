@@ -13,9 +13,18 @@ class User(db.Model):
     def avatar(self,size):
         return 'http://www.gravatar.com/avatar/' + md5(self.email.encode('utf-8')).hexdigest() + '?d=mm&s=' + str(size)
 
+    #判断账号是否存在
+    def Account_Judgment(self,username,password):
+        user = User.query.filter(and_(User.username == username,User.password == password))
+        if user == None:
+            return False
+        else:
+            return True
+
+    #判断邮箱、用户名是否注册过
     def valid_regist(self,username_value,email_value):
-        user = User.query.filter(or_(self.username == username_value,self.email == email_value)).first()
-        if user:
+        user = User.query.filter(or_(User.username == username_value,User.email == email_value)).first()
+        if user == None:
             return True
         else:
             return False

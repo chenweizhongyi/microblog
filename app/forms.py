@@ -3,8 +3,10 @@ from wtforms import StringField,BooleanField,PasswordField
 from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
-    openid =StringField('openid',validators=[DataRequired()])
+    openid =StringField('openid',validators=[])
     remember_me = BooleanField('remember_me',default=False)
+    username = StringField('username',validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
 
 class SigninForm(FlaskForm):
     username = StringField('username',validators=[DataRequired()])
