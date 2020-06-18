@@ -32,7 +32,10 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-
+        if User().Account_Judgment(form.username.data,form.password.data):
+            return redirect(url_for('user',username=form.username.data))
+        else:
+            flash('用户名或密码错误')
     # if form.validate_on_submit():
     #     session['remember_me'] = form.remember_me.data
     #     return oid.try_login(form.openid.data,ask_for=['nickname', 'email'])
@@ -75,12 +78,12 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/user/<nickname>')
+@app.route('/user/<username>')
 # @login_required
-def user(nickname):
-    user = User.query.filter_by(nickname = nickname).first()
+def user(username):
+    user = User.query.filter_by(username = username).first()
     if user == None:
-        flash('user' + nickname + 'not found.')
+        flash('user' + username + 'not found.')
         return redirect(url_for('index'))
     posts = [
         {'author': user, 'body': 'Test post #1'},

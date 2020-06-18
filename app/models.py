@@ -15,7 +15,7 @@ class User(db.Model):
 
     #判断账号是否存在
     def Account_Judgment(self,username,password):
-        user = User.query.filter(and_(User.username == username,User.password == password))
+        user = User.query.filter(and_(User.username == username,User.password == password)).first()
         if user == None:
             return False
         else:
