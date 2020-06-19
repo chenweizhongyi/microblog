@@ -26,13 +26,14 @@ def index():
 
 #登录视图函数
 @app.route('/login', methods = ['GET', 'POST'])
-@oid.loginhandler
 def login():
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
         if User().Account_Judgment(form.username.data,form.password.data):
+            session['username'] = form.username.data
+            login_user(User())
             return redirect(url_for('user',username=form.username.data))
         else:
             flash('用户名或密码错误')
